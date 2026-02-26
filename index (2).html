@@ -1,0 +1,2609 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>КРИПТО БАНК · ФИНАЛ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', monospace;
+        }
+
+        body {
+            background: #0a0a0f;
+            min-height: 100vh;
+            padding: 20px;
+            color: #e0b3ff;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, #8b5cf620 0%, #0a0a0f 70%);
+            animation: toxicPulse 8s ease infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes toxicPulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .app {
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ОКНО ВХОДА */
+        .auth-wrapper {
+            max-width: 500px;
+            margin: 50px auto;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-glass {
+            background: rgba(18, 10, 26, 0.8);
+            backdrop-filter: blur(12px);
+            border: 2px solid #8b5cf6;
+            border-radius: 40px;
+            padding: 35px;
+            box-shadow: 0 0 50px #8b5cf6;
+        }
+
+        .auth-title {
+            font-size: 48px;
+            font-weight: 800;
+            text-align: center;
+            background: linear-gradient(135deg, #8b5cf6, #ff00aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .auth-subtitle {
+            text-align: center;
+            color: #e0b3ff;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 18px 0;
+            background: rgba(139, 92, 246, 0.1);
+            border: 2px solid #8b5cf6;
+            border-radius: 50px;
+            color: #e0b3ff;
+            font-weight: 600;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .auth-tab:hover {
+            background: #8b5cf6;
+            color: #0a0a0f;
+        }
+
+        .auth-tab.active {
+            background: #8b5cf6;
+            color: #0a0a0f;
+        }
+
+        .auth-form {
+            transition: all 0.3s ease;
+        }
+
+        .auth-input-group {
+            margin-bottom: 20px;
+        }
+
+        .auth-label {
+            display: block;
+            color: #8b5cf6;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 18px 25px;
+            background: rgba(18, 10, 26, 0.9);
+            border: 2px solid #8b5cf6;
+            border-radius: 30px;
+            color: #e0b3ff;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: #ff00aa;
+        }
+
+        .auth-input.error {
+            border-color: #ff0000;
+            box-shadow: 0 0 20px #ff0000;
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #8b5cf6, #ff00aa);
+            border: none;
+            border-radius: 50px;
+            color: #0a0a0f;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px #ff00aa;
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 30px;
+            text-align: center;
+            color: #e0b3ff;
+            font-size: 14px;
+        }
+
+        .danger-btn {
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .danger-btn:hover {
+            background: #ff4444;
+            transform: translateY(-2px);
+        }
+
+        /* ОСНОВНЫЕ СТИЛИ */
+        .toxic-glass {
+            background: rgba(18, 10, 26, 0.8);
+            backdrop-filter: blur(12px);
+            border: 2px solid #8b5cf6;
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 0 30px #8b5cf6;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .profile-card {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            background: rgba(18, 10, 26, 0.9);
+            padding: 15px 35px;
+            border-radius: 60px;
+            border: 2px solid #8b5cf6;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #8b5cf6, #ff00aa);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: #0a0a0f;
+            border: 3px solid #ff00aa;
+            position: relative;
+        }
+
+        .clan-tag-badge {
+            position: absolute;
+            bottom: -5px;
+            left: -5px;
+            background: #8b5cf6;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .role-badge {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 800;
+            border: 2px solid #0a0a0f;
+        }
+
+        .badge-dev { background: #ff0000; color: white; }
+        .badge-admin { background: #8b5cf6; color: white; }
+        .badge-user { background: #ff00aa; color: white; }
+
+        .telegram-badge {
+            background: #0088cc;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .youtube-badge {
+            background: #ff0000;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        .balances {
+            display: flex;
+            gap: 25px;
+            background: rgba(18, 10, 26, 0.9);
+            padding: 15px 40px;
+            border-radius: 60px;
+            border: 2px solid #8b5cf6;
+        }
+
+        .balance-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .balance-value {
+            font-size: 28px;
+            font-weight: 700;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .usd .balance-value { color: #8b5cf6; }
+        .crystal .balance-value { color: #ff00aa; }
+
+        .toxic-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .toxic-tab {
+            padding: 18px 35px;
+            background: rgba(18, 10, 26, 0.9);
+            border: 2px solid #8b5cf6;
+            border-radius: 50px;
+            color: #e0b3ff;
+            font-weight: 600;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toxic-tab:hover {
+            background: #8b5cf6;
+            color: #0a0a0f;
+        }
+
+        .toxic-tab.active {
+            background: #8b5cf6;
+            color: #0a0a0f;
+        }
+
+        .click-button {
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #8b5cf6, #ff00aa);
+            border: 4px solid #e0b3ff;
+            box-shadow: 0 0 100px #8b5cf6;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 800;
+            color: #0a0a0f;
+            transition: all 0.1s;
+            margin: 0 auto 20px;
+        }
+
+        .click-button:active {
+            transform: scale(0.95);
+        }
+
+        .toxic-btn {
+            background: rgba(139, 92, 246, 0.2);
+            border: 2px solid #8b5cf6;
+            color: #e0b3ff;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toxic-btn:hover {
+            background: #8b5cf6;
+            color: #0a0a0f;
+        }
+
+        .toxic-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .toxic-card {
+            background: rgba(18, 10, 26, 0.7);
+            border: 2px solid #8b5cf6;
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .toxic-card:hover {
+            transform: translateX(10px);
+        }
+
+        .game-card {
+            background: rgba(139, 92, 246, 0.1);
+            border: 2px solid #ff00aa;
+            border-radius: 25px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .friend-online {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #00ff00;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .friend-offline {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #6b7280;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .admin-panel-dev {
+            border: 3px solid #ff0000;
+            border-radius: 30px;
+            padding: 30px;
+            margin-top: 30px;
+            background: linear-gradient(145deg, #1a0f1a, #0a0a0f);
+        }
+
+        .admin-panel-admin {
+            border: 3px solid #8b5cf6;
+            border-radius: 30px;
+            padding: 30px;
+            margin-top: 30px;
+            background: linear-gradient(145deg, #1a0f2a, #0a0a0f);
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .admin-btn-dev {
+            background: #2a1a2a;
+            border: 2px solid #ff0000;
+            color: white;
+            padding: 15px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .admin-btn-admin {
+            background: #1a1a2a;
+            border: 2px solid #8b5cf6;
+            color: white;
+            padding: 15px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .input-field {
+            background: rgba(18, 10, 26, 0.9);
+            border: 2px solid #8b5cf6;
+            border-radius: 30px;
+            padding: 18px 25px;
+            color: #e0b3ff;
+            font-size: 16px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #ff00aa;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .chat-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            height: 500px;
+        }
+
+        .chat-sidebar {
+            background: rgba(18, 10, 26, 0.9);
+            border: 2px solid #8b5cf6;
+            border-radius: 25px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .chat-main {
+            background: rgba(18, 10, 26, 0.9);
+            border: 2px solid #8b5cf6;
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            padding: 10px 15px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid #8b5cf6;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .chat-message.own {
+            align-self: flex-end;
+            background: rgba(139, 92, 246, 0.3);
+        }
+
+        .chat-input-area {
+            padding: 20px;
+            border-top: 2px solid #8b5cf6;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(18, 10, 26, 0.9);
+            border: 2px solid #8b5cf6;
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: #e0b3ff;
+        }
+
+        .chat-tab {
+            padding: 10px 15px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid #8b5cf6;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .chat-tab.active {
+            background: #8b5cf6;
+            color: #0a0a0f;
+        }
+
+        .online-count {
+            background: #00ff00;
+            color: #0a0a0f;
+            padding: 2px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .floating-number {
+            position: fixed;
+            color: #8b5cf6;
+            font-size: 28px;
+            font-weight: 800;
+            pointer-events: none;
+            animation: floatUp 1.5s ease-out forwards;
+            z-index: 10001;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-150px); opacity: 0; }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(18, 10, 26, 0.95);
+            border-left: 6px solid #8b5cf6;
+            color: #e0b3ff;
+            padding: 20px 30px;
+            border-radius: 30px;
+            z-index: 10002;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: rgba(18, 10, 26, 0.7);
+            border: 2px solid #8b5cf6;
+            border-radius: 25px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #8b5cf6;
+        }
+
+        .crypto-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b5cf6, #ff00aa);
+            border-radius: 10px;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .rank-1 { background: gold; color: black; }
+        .rank-2 { background: silver; color: black; }
+        .rank-3 { background: #cd7f32; color: black; }
+    </style>
+</head>
+<body>
+    <div class="app" id="app"></div>
+
+    <script>
+        // ==================== ГЛОБАЛЬНЫЕ ДАННЫЕ ====================
+        let currentUser = null;
+        let users = [];
+        let clans = [];
+        let messages = { global: [], clan: {} };
+        let auctions = [];
+        let businesses = [];
+        let pvpBattles = [];
+        let currentChat = 'global';
+        let currentTab = 'mine';
+        let showAdminPanel = false;
+        let viewingProfile = null;
+        
+        let cryptoRates = { BTC: 45000, ETH: 2800, SOL: 110, DOGE: 0.12 };
+
+        const miners = [
+            { id: 'cpu', name: '🖥️ CPU Майнер', price: 100, income: 1, emoji: '💻' },
+            { id: 'gpu', name: '🎮 GPU Майнер', price: 500, income: 5, emoji: '🖥️' },
+            { id: 'asic', name: '⚡ ASIC Майнер', price: 2500, income: 25, emoji: '🏭' },
+            { id: 'farm', name: '🏭 Майнинг ферма', price: 10000, income: 100, emoji: '⚙️' },
+            { id: 'quantum', name: '🔮 Quantum', price: 50000, income: 500, emoji: '💎' }
+        ];
+
+        const nfts = [
+            { id: 'nft1', name: 'Crypto Punk', bonus: 0.01, emoji: '👤' },
+            { id: 'nft2', name: 'Bored Ape', bonus: 0.03, emoji: '🐒' },
+            { id: 'nft3', name: 'Cyber Cat', bonus: 0.05, emoji: '🐱' },
+            { id: 'nft4', name: 'Digital God', bonus: 0.10, emoji: '👑' },
+            { id: 'nft5', name: 'Mystic Alien', bonus: 0.15, emoji: '👽' }
+        ];
+
+        let vipPrices = { 1: 1000, 3: 2500, 6: 4500, 12: 8000 };
+
+        const clanUpgradePrices = {
+            2: 2000,
+            3: 5000,
+            4: 10000,
+            5: 20000,
+            6: 40000,
+            7: 80000,
+            8: 150000,
+            9: 300000,
+            10: 500000
+        };
+
+        const businessUpgradePrices = {
+            2: 1000,
+            3: 2500,
+            4: 5000,
+            5: 10000,
+            6: 20000,
+            7: 40000,
+            8: 80000,
+            9: 150000,
+            10: 300000
+        };
+
+        const achievements = [
+            { id: 'first_click', name: 'Первый шаг', icon: '👆', reward: 10 },
+            { id: 'first_miner', name: 'Начинающий майнер', icon: '⛏️', reward: 50 },
+            { id: 'first_friend', name: 'Дружелюбный', icon: '👥', reward: 20 },
+            { id: 'first_crypto', name: 'Крипто-инвестор', icon: '📈', reward: 30 },
+            { id: 'first_clan', name: 'Лидер', icon: '⚔️', reward: 100 },
+            { id: 'first_business', name: 'Бизнесмен', icon: '🏢', reward: 200 },
+            { id: 'first_auction', name: 'Торговец', icon: '🏪', reward: 150 },
+            { id: 'first_pvp', name: 'Воин', icon: '🔫', reward: 300 },
+            { id: 'millionaire', name: 'Миллионер', icon: '💰', reward: 500 },
+            { id: 'vip_member', name: 'VIP', icon: '👑', reward: 200 },
+            { id: 'collector', name: 'Коллекционер', icon: '💎', reward: 1000 }
+        ];
+
+        // ==================== БЛОКИРОВКА КНОПОК ====================
+        let buttonLocked = {
+            login: false,
+            register: false
+        };
+
+        function lockButton(type) {
+            buttonLocked[type] = true;
+            const btn = document.getElementById(type === 'login' ? 'loginBtn' : 'registerBtn');
+            if (btn) btn.disabled = true;
+            setTimeout(() => {
+                buttonLocked[type] = false;
+                if (btn) btn.disabled = false;
+            }, 1000);
+        }
+
+        // ==================== УТИЛИТЫ ====================
+        function showToast(msg, isError = false) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.borderLeftColor = isError ? '#ff6b6b' : '#8b5cf6';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function formatMoney(n) {
+            if (n === undefined || n === null || isNaN(n)) return '0.00';
+            return n.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+
+        function createFloatingNumber(x, y, text) {
+            const el = document.createElement('div');
+            el.className = 'floating-number';
+            el.textContent = text;
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 1500);
+        }
+
+        function getUserRole(user) {
+            if (!user) return 'USER';
+            if (user.id === 'user_177') return 'DEV';
+            return user.role || 'USER';
+        }
+
+        function getUserClan(userId) {
+            if (!userId) return null;
+            return clans.find(c => c.members?.some(m => m.userId === userId));
+        }
+
+        function getClanRank(userId) {
+            const clan = getUserClan(userId);
+            if (!clan) return null;
+            const member = clan.members.find(m => m.userId === userId);
+            return member ? member.rank : null;
+        }
+
+        function getUserBusiness(userId) {
+            if (!userId) return null;
+            return businesses.find(b => b.ownerId === userId || b.employees?.some(e => e.userId === userId));
+        }
+
+        function getTotalBonus(user) {
+            if (!user) return 1;
+            let bonus = 1;
+            if (user.nfts) user.nfts.forEach(n => { if (n?.bonus) bonus += n.bonus; });
+            const clan = getUserClan(user.id);
+            if (clan?.clanBonus) bonus *= clan.clanBonus;
+            if (user.vip?.active && user.vip.expiresAt > Date.now()) bonus *= 1.5;
+            return bonus;
+        }
+
+        function getTimeLeft(expiresAt) {
+            const diff = expiresAt - Date.now();
+            if (diff <= 0) return 'Истек';
+            const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+            const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+            return `${days}д ${hours}ч`;
+        }
+
+        function getOnlineCount() {
+            return users.filter(u => u.online && Date.now() - u.lastSeen < 60000).length;
+        }
+
+        // ==================== СОХРАНЕНИЕ С ПРОВЕРКОЙ ====================
+        function saveAll() {
+            try {
+                localStorage.setItem('cryptoBankUsers', JSON.stringify(users));
+                localStorage.setItem('cryptoBankClans', JSON.stringify(clans));
+                localStorage.setItem('cryptoBankMessages', JSON.stringify(messages));
+                localStorage.setItem('cryptoBankAuctions', JSON.stringify(auctions));
+                localStorage.setItem('cryptoBankBusinesses', JSON.stringify(businesses));
+                localStorage.setItem('cryptoBankPvp', JSON.stringify(pvpBattles));
+                if (currentUser) localStorage.setItem('cryptoBankSession', JSON.stringify(currentUser));
+            } catch (e) {
+                console.log('Ошибка сохранения:', e);
+            }
+        }
+
+        // ==================== ЗАГРУЗКА С ВАЛИДАЦИЕЙ ====================
+        function safeJSONParse(str, defaultValue) {
+            try {
+                return JSON.parse(str) || defaultValue;
+            } catch {
+                return defaultValue;
+            }
+        }
+
+        function loadData() {
+            users = safeJSONParse(localStorage.getItem('cryptoBankUsers'), []);
+            clans = safeJSONParse(localStorage.getItem('cryptoBankClans'), []);
+            messages = safeJSONParse(localStorage.getItem('cryptoBankMessages'), { global: [], clan: {} });
+            auctions = safeJSONParse(localStorage.getItem('cryptoBankAuctions'), []);
+            businesses = safeJSONParse(localStorage.getItem('cryptoBankBusinesses'), []);
+            pvpBattles = safeJSONParse(localStorage.getItem('cryptoBankPvp'), []);
+            
+            if (!users.find(u => u?.id === 'user_177')) {
+                users.push({
+                    id: 'user_177',
+                    login: 'exeosinter',
+                    password: 'admin',
+                    name: 'exeosinter',
+                    telegram: '@mwn1w',
+                    youtube: '@mwn1w',
+                    role: 'DEV',
+                    balanceUsd: 999999999,
+                    balanceCrystal: 999999,
+                    cardNumber: 'LEAD-177',
+                    totalClicks: 0,
+                    clickMultiplier: 1,
+                    autoClicker: true,
+                    miners: miners.map(m => ({ id: m.id })),
+                    nfts: nfts.map(n => ({ ...n })),
+                    cryptoPortfolio: { BTC: 100, ETH: 1000, SOL: 5000, DOGE: 100000 },
+                    friends: [],
+                    friendRequests: [],
+                    online: true,
+                    lastSeen: Date.now(),
+                    vip: { active: true, expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000 },
+                    warnings: 0,
+                    muted: false,
+                    achievements: achievements.map(a => a.id),
+                    transactions: [],
+                    games: { roulette: 0, dice: 0, double: 0 },
+                    pvpWins: 0,
+                    pvpLosses: 0
+                });
+            }
+            
+            const session = safeJSONParse(localStorage.getItem('cryptoBankSession'), null);
+            if (session?.id) {
+                currentUser = users.find(u => u.id === session.id) || session;
+            }
+        }
+
+        // ==================== ОЧИСТКА ДАННЫХ ====================
+        function clearAllData() {
+            if (confirm('Все данные будут удалены! Продолжить?')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        // ==================== ФУНКЦИИ ВХОДА (С ПРОВЕРКАМИ) ====================
+        function showLoginForm() {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegister = document.getElementById('tabRegister');
+            
+            if (loginForm) loginForm.style.display = 'block';
+            if (registerForm) registerForm.style.display = 'none';
+            if (tabLogin) tabLogin.classList.add('active');
+            if (tabRegister) tabRegister.classList.remove('active');
+        }
+
+        function showRegisterForm() {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegister = document.getElementById('tabRegister');
+            
+            if (registerForm) registerForm.style.display = 'block';
+            if (loginForm) loginForm.style.display = 'none';
+            if (tabRegister) tabRegister.classList.add('active');
+            if (tabLogin) tabLogin.classList.remove('active');
+        }
+
+        function handleLogin() {
+            if (buttonLocked.login) {
+                showToast('Подождите секунду...', true);
+                return;
+            }
+            
+            const loginInput = document.getElementById('loginLogin');
+            const passInput = document.getElementById('loginPass');
+            
+            if (!loginInput || !passInput) {
+                showToast('Ошибка: поля ввода не найдены', true);
+                return;
+            }
+            
+            const login = loginInput.value;
+            const pass = passInput.value;
+            
+            if (!login || !pass) {
+                showToast('Введите логин и пароль', true);
+                if (loginInput) loginInput.classList.add('error');
+                if (passInput) passInput.classList.add('error');
+                setTimeout(() => {
+                    if (loginInput) loginInput.classList.remove('error');
+                    if (passInput) passInput.classList.remove('error');
+                }, 1000);
+                return;
+            }
+            
+            lockButton('login');
+            
+            const user = users.find(u => u.login === login && u.password === pass);
+            if (user) {
+                currentUser = user;
+                currentUser.online = true;
+                currentUser.lastSeen = Date.now();
+                saveAll();
+                showToast(`Добро пожаловать, ${user.name}!`);
+                render();
+            } else {
+                showToast('Неверный логин или пароль', true);
+            }
+        }
+
+        function handleRegister() {
+            if (buttonLocked.register) {
+                showToast('Подождите секунду...', true);
+                return;
+            }
+            
+            const loginInput = document.getElementById('regLogin');
+            const passInput = document.getElementById('regPass');
+            const nameInput = document.getElementById('regName');
+            
+            if (!loginInput || !passInput || !nameInput) {
+                showToast('Ошибка: поля ввода не найдены', true);
+                return;
+            }
+            
+            const login = loginInput.value;
+            const pass = passInput.value;
+            const name = nameInput.value;
+            
+            if (!login || !pass || !name) {
+                showToast('Заполните все поля', true);
+                if (!login) loginInput.classList.add('error');
+                if (!pass) passInput.classList.add('error');
+                if (!name) nameInput.classList.add('error');
+                setTimeout(() => {
+                    loginInput.classList.remove('error');
+                    passInput.classList.remove('error');
+                    nameInput.classList.remove('error');
+                }, 1000);
+                return;
+            }
+            
+            if (login.length < 3) {
+                showToast('Логин минимум 3 символа', true);
+                loginInput.classList.add('error');
+                setTimeout(() => loginInput.classList.remove('error'), 1000);
+                return;
+            }
+            
+            if (pass.length < 3) {
+                showToast('Пароль минимум 3 символа', true);
+                passInput.classList.add('error');
+                setTimeout(() => passInput.classList.remove('error'), 1000);
+                return;
+            }
+            
+            if (users.find(u => u.login === login)) {
+                showToast('Логин уже занят', true);
+                loginInput.classList.add('error');
+                setTimeout(() => loginInput.classList.remove('error'), 1000);
+                return;
+            }
+            
+            lockButton('register');
+            
+            const newUser = {
+                id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                login: login,
+                password: pass,
+                name: name,
+                role: 'USER',
+                balanceUsd: 100,
+                balanceCrystal: 50,
+                cardNumber: '**** **** **** ' + Math.floor(1000 + Math.random()*9000),
+                totalClicks: 0,
+                clickMultiplier: 1,
+                autoClicker: false,
+                miners: [], 
+                nfts: [], 
+                friends: [], 
+                friendRequests: [],
+                cryptoPortfolio: { BTC:0, ETH:0, SOL:0, DOGE:0 },
+                online: true,
+                lastSeen: Date.now(),
+                warnings: 0,
+                muted: false,
+                achievements: [],
+                transactions: [],
+                games: { roulette: 0, dice: 0, double: 0 },
+                pvpWins: 0,
+                pvpLosses: 0
+            };
+            
+            users.push(newUser);
+            currentUser = newUser;
+            saveAll();
+            showToast(`✅ Добро пожаловать, ${name}!`);
+            render();
+        }
+
+        // ==================== ФУНКЦИИ НАВИГАЦИИ ====================
+        function switchTab(tab) {
+            currentTab = tab;
+            viewingProfile = null;
+            render();
+        }
+
+        function toggleAdminPanel() {
+            showAdminPanel = !showAdminPanel;
+            render();
+        }
+
+        function switchChat(chat) {
+            currentChat = chat;
+            render();
+        }
+
+        function viewProfile(userId) {
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                viewingProfile = user;
+                render();
+            }
+        }
+
+        function closeProfile() {
+            viewingProfile = null;
+            render();
+        }
+
+        // ==================== ФУНКЦИИ ИГРЫ ====================
+        function handleClick(e) {
+            const bonus = getTotalBonus(currentUser);
+            const earned = 1 * (bonus || 1);
+            currentUser.balanceUsd += earned;
+            currentUser.totalClicks++;
+            createFloatingNumber(e.clientX, e.clientY, `+$${earned.toFixed(2)}`);
+            if (Math.random() < 0.05) {
+                currentUser.balanceCrystal++;
+                showToast('💎 +1 кристалл!');
+            }
+            saveAll();
+            render();
+        }
+
+        function buyCrypto(coin, amount) {
+            if (!currentUser) return;
+            const price = cryptoRates[coin] * amount;
+            if (currentUser.balanceUsd >= price) {
+                currentUser.balanceUsd -= price;
+                if (!currentUser.cryptoPortfolio) currentUser.cryptoPortfolio = { BTC:0, ETH:0, SOL:0, DOGE:0 };
+                currentUser.cryptoPortfolio[coin] = (currentUser.cryptoPortfolio[coin] || 0) + amount;
+                saveAll(); render(); showToast(`✅ Куплено ${amount} ${coin}`);
+            } else showToast('❌ Недостаточно $', true);
+        }
+
+        function sellCrypto(coin, amount) {
+            if (!currentUser) return;
+            if ((currentUser.cryptoPortfolio?.[coin] || 0) < amount) {
+                showToast('❌ Нет монет', true); return;
+            }
+            const price = cryptoRates[coin] * amount;
+            currentUser.balanceUsd += price;
+            currentUser.cryptoPortfolio[coin] -= amount;
+            saveAll(); render(); showToast(`✅ Продано за $${price.toFixed(2)}`);
+        }
+
+        function buyMiner(minerId) {
+            if (!currentUser) return;
+            const miner = miners.find(m => m.id === minerId);
+            if (currentUser.miners?.some(m => m.id === minerId)) {
+                showToast('Уже куплено', true); return;
+            }
+            if (currentUser.balanceUsd >= miner.price) {
+                if (!currentUser.miners) currentUser.miners = [];
+                currentUser.balanceUsd -= miner.price;
+                currentUser.miners.push({ id: minerId });
+                saveAll(); render(); showToast(`✅ Куплен ${miner.name}`);
+            } else showToast('❌ Недостаточно $', true);
+        }
+
+        function buyVip(months) {
+            if (!currentUser) return;
+            const price = vipPrices[months];
+            if (currentUser.balanceCrystal < price) {
+                showToast('❌ Недостаточно кристаллов', true); return;
+            }
+            currentUser.balanceCrystal -= price;
+            currentUser.vip = { active: true, expiresAt: Date.now() + months * 30 * 24 * 60 * 60 * 1000 };
+            saveAll(); render(); showToast(`✅ VIP на ${months} мес`);
+        }
+
+        function editContacts() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3 style="color:#8b5cf6;">📱 КОНТАКТЫ</h3>
+                        <input type="text" id="editTelegram" class="input-field" placeholder="Telegram" value="${currentUser.telegram || ''}">
+                        <input type="text" id="editYoutube" class="input-field" placeholder="YouTube" value="${currentUser.youtube || ''}">
+                        <button class="toxic-btn" onclick="saveContacts()">Сохранить</button>
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Отмена</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function saveContacts() {
+            const telegram = document.getElementById('editTelegram')?.value;
+            const youtube = document.getElementById('editYoutube')?.value;
+            if (telegram !== undefined) currentUser.telegram = telegram || null;
+            if (youtube !== undefined) currentUser.youtube = youtube || null;
+            saveAll();
+            render();
+            document.querySelector('.modal')?.remove();
+            showToast('✅ Контакты обновлены');
+        }
+
+        function showTransferModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3 style="color:#8b5cf6;">💸 ПЕРЕВОД</h3>
+                        <input type="text" id="transferLogin" class="input-field" placeholder="Логин получателя">
+                        <input type="number" id="transferAmount" class="input-field" placeholder="Сумма $" min="0">
+                        <input type="number" id="transferCrystals" class="input-field" placeholder="Кристаллы 💎" min="0">
+                        <button class="toxic-btn" onclick="confirmTransfer()">Перевести</button>
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Отмена</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function confirmTransfer() {
+            const login = document.getElementById('transferLogin')?.value;
+            const amount = parseFloat(document.getElementById('transferAmount')?.value) || 0;
+            const crystals = parseInt(document.getElementById('transferCrystals')?.value) || 0;
+            
+            if (!login) { showToast('Введите логин', true); return; }
+            if (amount <= 0 && crystals <= 0) { showToast('Введите сумму', true); return; }
+            
+            const recipient = users.find(u => u.login === login);
+            if (!recipient) { showToast('Пользователь не найден', true); return; }
+            if (recipient.id === currentUser.id) { showToast('Нельзя переводить себе', true); return; }
+            if (amount > 0 && currentUser.balanceUsd < amount) { showToast('Недостаточно $', true); return; }
+            if (crystals > 0 && currentUser.balanceCrystal < crystals) { showToast('Недостаточно кристаллов', true); return; }
+            
+            if (amount > 0) {
+                currentUser.balanceUsd -= amount;
+                recipient.balanceUsd += amount;
+            }
+            if (crystals > 0) {
+                currentUser.balanceCrystal -= crystals;
+                recipient.balanceCrystal += crystals;
+            }
+            
+            saveAll();
+            render();
+            document.querySelector('.modal')?.remove();
+            showToast('✅ Перевод выполнен');
+        }
+
+        // ==================== ФУНКЦИИ ДРУЗЕЙ ====================
+        function showAddFriendModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3 style="color:#8b5cf6;">➕ ДОБАВИТЬ ДРУГА</h3>
+                        <input type="text" id="friendLogin" class="input-field" placeholder="Логин друга">
+                        <button class="toxic-btn" onclick="sendFriendRequest()">Отправить</button>
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Закрыть</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function sendFriendRequest() {
+            const login = document.getElementById('friendLogin')?.value;
+            if (!login) { showToast('Введите логин', true); return; }
+            
+            const friend = users.find(u => u.login === login && u.id !== currentUser.id);
+            if (!friend) { showToast('Пользователь не найден', true); return; }
+            
+            if (!friend.friendRequests) friend.friendRequests = [];
+            if (friend.friendRequests.includes(currentUser.id)) {
+                showToast('Заявка уже отправлена', true);
+                return;
+            }
+            
+            friend.friendRequests.push(currentUser.id);
+            saveAll();
+            showToast('✅ Заявка отправлена');
+            document.querySelector('.modal')?.remove();
+        }
+
+        function acceptFriend(id) {
+            const friend = users.find(u => u.id === id);
+            if (!friend) return;
+            
+            if (!currentUser.friends) currentUser.friends = [];
+            if (!friend.friends) friend.friends = [];
+            
+            currentUser.friends.push(id);
+            friend.friends.push(currentUser.id);
+            currentUser.friendRequests = (currentUser.friendRequests || []).filter(f => f !== id);
+            
+            saveAll();
+            render();
+            showToast('✅ Друг добавлен');
+        }
+
+        function rejectFriend(id) {
+            currentUser.friendRequests = (currentUser.friendRequests || []).filter(f => f !== id);
+            saveAll();
+            render();
+            showToast('❌ Заявка отклонена');
+        }
+
+        function giftFriend(id) {
+            const friend = users.find(u => u.id === id);
+            if (!friend) return;
+            
+            if (currentUser.balanceCrystal >= 10) {
+                currentUser.balanceCrystal -= 10;
+                friend.balanceCrystal += 10;
+                saveAll();
+                render();
+                showToast('💎 Подарено 10 кристаллов');
+            } else showToast('❌ Нет кристаллов', true);
+        }
+
+        // ==================== ФУНКЦИИ КЛАНОВ ====================
+        function showCreateClanModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3 style="color:#8b5cf6;">⚔️ СОЗДАТЬ КЛАН</h3>
+                        <input type="text" id="clanName" class="input-field" placeholder="Название">
+                        <input type="text" id="clanTag" class="input-field" placeholder="Тег" maxlength="5">
+                        <button class="toxic-btn" onclick="createClan()">Создать (1000💎)</button>
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Отмена</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function createClan() {
+            const name = document.getElementById('clanName')?.value;
+            let tag = document.getElementById('clanTag')?.value?.toUpperCase();
+            
+            if (!name || !tag) { showToast('Заполните поля', true); return; }
+            if (tag.length > 5) { showToast('Тег до 5 символов', true); return; }
+            if (currentUser.balanceCrystal < 1000) { showToast('❌ Нет кристаллов', true); return; }
+            if (clans.find(c => c.tag === tag)) { showToast('Тег уже используется', true); return; }
+            
+            currentUser.balanceCrystal -= 1000;
+            clans.push({
+                id: 'clan_' + Date.now(),
+                name: name,
+                tag: tag,
+                founderId: currentUser.id,
+                level: 1,
+                clanBonus: 1.05,
+                members: [{ userId: currentUser.id, rank: 'founder' }],
+                treasury: 0
+            });
+            
+            saveAll();
+            render();
+            document.querySelector('.modal')?.remove();
+            showToast('✅ Клан создан');
+        }
+
+        function joinClan(clanId) {
+            const clan = clans.find(c => c.id === clanId);
+            if (!clan) return;
+            clan.members.push({ userId: currentUser.id, rank: 'member' });
+            saveAll();
+            render();
+            showToast('✅ Вы вступили в клан');
+        }
+
+        function showChangeTagModal() {
+            const clan = getUserClan(currentUser.id);
+            if (!clan) return;
+            
+            const rank = getClanRank(currentUser.id);
+            if (rank !== 'founder' && rank !== 'leader') {
+                showToast('❌ Только лидер может менять тег', true);
+                return;
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3 style="color:#8b5cf6;">✏️ СМЕНИТЬ ТЕГ</h3>
+                        <input type="text" id="newTag" class="input-field" placeholder="Новый тег" maxlength="5">
+                        <button class="toxic-btn" onclick="changeTag()">Сменить (5000💎)</button>
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Отмена</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function changeTag() {
+            const clan = getUserClan(currentUser.id);
+            const newTag = document.getElementById('newTag')?.value?.toUpperCase();
+            
+            if (!newTag || newTag.length > 5) { showToast('Тег 1-5 символов', true); return; }
+            if (clans.find(c => c.tag === newTag && c.id !== clan.id)) { showToast('Тег уже используется', true); return; }
+            if (currentUser.balanceCrystal < 5000) { showToast('❌ Нет кристаллов', true); return; }
+            
+            currentUser.balanceCrystal -= 5000;
+            clan.tag = newTag;
+            saveAll();
+            render();
+            document.querySelector('.modal')?.remove();
+            showToast(`✅ Тег изменен на [${newTag}]`);
+        }
+
+        function upgradeClan() {
+            const clan = getUserClan(currentUser.id);
+            if (!clan) return;
+            
+            const rank = getClanRank(currentUser.id);
+            if (rank !== 'founder' && rank !== 'leader') {
+                showToast('❌ Только лидер может улучшать клан', true);
+                return;
+            }
+            
+            const nextLevel = clan.level + 1;
+            const price = clanUpgradePrices[nextLevel];
+            if (!price) { showToast('❌ Максимальный уровень', true); return; }
+            if (currentUser.balanceCrystal < price) { showToast('❌ Нет кристаллов', true); return; }
+            
+            currentUser.balanceCrystal -= price;
+            clan.level = nextLevel;
+            clan.clanBonus = 1 + (clan.level * 0.05);
+            
+            saveAll();
+            render();
+            showToast(`✅ Клан улучшен до ${nextLevel} уровня`);
+        }
+
+        // ==================== МИНИ-ИГРЫ ====================
+        function playRoulette() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3 style="color:#8b5cf6;">🎰 РУЛЕТКА</h3>
+                        <input type="number" id="rouletteBet" class="input-field" placeholder="Ставка $" value="100">
+                        <button class="toxic-btn" onclick="rouletteRed()">🔴 КРАСНОЕ</button>
+                        <button class="toxic-btn" onclick="rouletteBlack()">⚫ ЧЁРНОЕ</button>
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Закрыть</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function rouletteRed() {
+            const bet = parseFloat(document.getElementById('rouletteBet')?.value);
+            if (isNaN(bet) || bet < 10) { showToast('Минимум 10$', true); return; }
+            if (currentUser.balanceUsd < bet) { showToast('Недостаточно $', true); return; }
+            
+            const win = Math.random() < 0.5;
+            currentUser.balanceUsd -= bet;
+            if (win) {
+                currentUser.balanceUsd += bet * 2;
+                showToast(`🎉 ВЫИГРЫШ! +$${bet}`);
+            } else showToast(`😢 ПРОИГРЫШ`);
+            
+            if (!currentUser.games) currentUser.games = { roulette:0, dice:0, double:0 };
+            currentUser.games.roulette++;
+            saveAll();
+            render();
+            document.querySelector('.modal')?.remove();
+        }
+
+        function rouletteBlack() {
+            const bet = parseFloat(document.getElementById('rouletteBet')?.value);
+            if (isNaN(bet) || bet < 10) { showToast('Минимум 10$', true); return; }
+            if (currentUser.balanceUsd < bet) { showToast('Недостаточно $', true); return; }
+            
+            const win = Math.random() < 0.5;
+            currentUser.balanceUsd -= bet;
+            if (win) {
+                currentUser.balanceUsd += bet * 2;
+                showToast(`🎉 ВЫИГРЫШ! +$${bet}`);
+            } else showToast(`😢 ПРОИГРЫШ`);
+            
+            if (!currentUser.games) currentUser.games = { roulette:0, dice:0, double:0 };
+            currentUser.games.roulette++;
+            saveAll();
+            render();
+            document.querySelector('.modal')?.remove();
+        }
+
+        function playDice() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3 style="color:#8b5cf6;">🎲 КОСТИ</h3>
+                        <input type="number" id="diceBet" class="input-field" placeholder="Ставка $" value="100">
+                        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:5px;">
+                            ${[1,2,3,4,5,6].map(n => `<button class="toxic-btn" onclick="diceGuess(${n})">${n}</button>`).join('')}
+                        </div>
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Закрыть</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function diceGuess(guess) {
+            const bet = parseFloat(document.getElementById('diceBet')?.value);
+            if (isNaN(bet) || bet < 10) { showToast('Минимум 10$', true); return; }
+            if (currentUser.balanceUsd < bet) { showToast('Недостаточно $', true); return; }
+            
+            const result = Math.floor(Math.random() * 6) + 1;
+            currentUser.balanceUsd -= bet;
+            if (result === guess) {
+                currentUser.balanceUsd += bet * 6;
+                showToast(`🎉 ВЫИГРЫШ! Выпало ${result}! +$${bet*5}`);
+            } else showToast(`😢 ПРОИГРЫШ... Выпало ${result}`);
+            
+            if (!currentUser.games) currentUser.games = { roulette:0, dice:0, double:0 };
+            currentUser.games.dice++;
+            saveAll();
+            render();
+            document.querySelector('.modal')?.remove();
+        }
+
+        function playDouble() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3 style="color:#8b5cf6;">⚡ УДВОЕНИЕ</h3>
+                        <input type="number" id="doubleBet" class="input-field" placeholder="Ставка $" value="100">
+                        <button class="toxic-btn" onclick="doubleGame()">🎲 ИГРАТЬ</button>
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Закрыть</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function doubleGame() {
+            const bet = parseFloat(document.getElementById('doubleBet')?.value);
+            if (isNaN(bet) || bet < 10) { showToast('Минимум 10$', true); return; }
+            if (currentUser.balanceUsd < bet) { showToast('Недостаточно $', true); return; }
+            
+            const win = Math.random() < 0.5;
+            currentUser.balanceUsd -= bet;
+            if (win) {
+                currentUser.balanceUsd += bet * 2;
+                showToast(`🎉 УДВОИЛ! +$${bet}`);
+            } else showToast(`😢 ПРОИГРАЛ... -$${bet}`);
+            
+            if (!currentUser.games) currentUser.games = { roulette:0, dice:0, double:0 };
+            currentUser.games.double++;
+            saveAll();
+            render();
+            document.querySelector('.modal')?.remove();
+        }
+
+        // ==================== ФУНКЦИИ ЧАТА ====================
+        function sendMessage() {
+            if (!currentUser) return;
+            const input = document.getElementById('chatInput');
+            if (!input) return;
+            
+            const text = input.value.trim();
+            if (!text) return;
+            if (currentUser.muted) { showToast('Вы заглушены', true); return; }
+            
+            const message = { userId: currentUser.id, text: text, time: Date.now() };
+            
+            if (currentChat === 'global') {
+                if (!messages.global) messages.global = [];
+                messages.global.push(message);
+                if (messages.global.length > 100) messages.global.shift();
+            } else {
+                const clan = getUserClan(currentUser.id);
+                if (clan) {
+                    if (!messages.clan[clan.id]) messages.clan[clan.id] = [];
+                    messages.clan[clan.id].push(message);
+                    if (messages.clan[clan.id].length > 100) messages.clan[clan.id].shift();
+                }
+            }
+            
+            input.value = '';
+            saveAll();
+            render();
+        }
+
+        // ==================== АДМИН ФУНКЦИИ ====================
+        function adminGiveMoney() {
+            const login = document.getElementById('adminUserLogin')?.value;
+            const amount = parseInt(document.getElementById('adminMoneyAmount')?.value) || 1000;
+            const user = users.find(u => u.login === login);
+            if (user) { user.balanceUsd += amount; saveAll(); render(); showToast(`✅ Выдано $${amount}`); }
+            else showToast('❌ Не найден', true);
+        }
+
+        function adminGiveCrystals() {
+            const login = document.getElementById('adminUserLogin')?.value;
+            const amount = parseInt(document.getElementById('adminCrystalAmount')?.value) || 500;
+            const user = users.find(u => u.login === login);
+            if (user) { user.balanceCrystal += amount; saveAll(); render(); showToast(`✅ Выдано ${amount}💎`); }
+            else showToast('❌ Не найден', true);
+        }
+
+        function adminGiveNFT() {
+            const login = document.getElementById('adminUserLogin')?.value;
+            const user = users.find(u => u.login === login);
+            if (user) {
+                if (!user.nfts) user.nfts = [];
+                user.nfts.push({...nfts[Math.floor(Math.random()*nfts.length)]});
+                saveAll(); render(); showToast('✅ NFT выдано');
+            } else showToast('❌ Не найден', true);
+        }
+
+        function adminGiveMiner() {
+            const login = document.getElementById('adminUserLogin')?.value;
+            const user = users.find(u => u.login === login);
+            if (user) {
+                if (!user.miners) user.miners = [];
+                user.miners.push({ id: miners[Math.floor(Math.random()*miners.length)].id });
+                saveAll(); render(); showToast('✅ Майнер выдан');
+            } else showToast('❌ Не найден', true);
+        }
+
+        function adminSetRole(role) {
+            const login = document.getElementById('adminUserLogin')?.value;
+            const user = users.find(u => u.login === login);
+            if (user && user.id !== 'user_177') {
+                user.role = role; saveAll(); render(); showToast(`✅ Роль ${role}`);
+            } else if (user?.id === 'user_177') showToast('❌ Нельзя изменить роль разработчика', true);
+            else showToast('❌ Не найден', true);
+        }
+
+        function adminRemoveRole() {
+            const login = document.getElementById('adminUserLogin')?.value;
+            const user = users.find(u => u.login === login);
+            if (user && user.id !== 'user_177') {
+                user.role = 'USER'; saveAll(); render(); showToast('✅ Роль удалена');
+            } else if (user?.id === 'user_177') showToast('❌ Нельзя изменить роль разработчика', true);
+            else showToast('❌ Не найден', true);
+        }
+
+        function adminGiveVip() {
+            const login = document.getElementById('adminUserLogin')?.value;
+            const user = users.find(u => u.login === login);
+            if (!user) { showToast('❌ Не найден', true); return; }
+            const days = prompt('Дней:', '30');
+            if (!days) return;
+            user.vip = { active: true, expiresAt: Date.now() + parseInt(days) * 24 * 60 * 60 * 1000 };
+            saveAll(); render(); showToast(`✅ VIP на ${days} дней`);
+        }
+
+        function adminCheckUser() {
+            const login = document.getElementById('adminUserLogin')?.value;
+            const user = users.find(u => u.login === login);
+            if (!user) { showToast('❌ Не найден', true); return; }
+            showToast(`👤 ${user.name} | $${formatMoney(user.balanceUsd)} | 💎 ${user.balanceCrystal} | ⛏️ ${user.miners?.length || 0}`);
+        }
+
+        function adminBan() {
+            const login = document.getElementById('adminUserLogin')?.value;
+            const index = users.findIndex(u => u.login === login);
+            if (index === -1) { showToast('❌ Не найден', true); return; }
+            if (users[index].id === 'user_177') { showToast('❌ Нельзя забанить разработчика', true); return; }
+            users.splice(index, 1);
+            saveAll(); render(); showToast('✅ Пользователь забанен');
+        }
+
+        function adminWarn() {
+            const login = document.getElementById('adminUserLogin')?.value;
+            const user = users.find(u => u.login === login);
+            if (user) {
+                user.warnings = (user.warnings || 0) + 1;
+                saveAll(); render(); showToast(`⚠️ Варн (${user.warnings})`);
+            } else showToast('❌ Не найден', true);
+        }
+
+        function adminMute() {
+            const login = document.getElementById('adminUserLogin')?.value;
+            const user = users.find(u => u.login === login);
+            if (user) {
+                user.muted = !user.muted;
+                saveAll(); render(); showToast(`🔇 ${user.muted ? 'Заглушен' : 'Разглушен'}`);
+            } else showToast('❌ Не найден', true);
+        }
+
+        function adminClearChat() {
+            if (currentChat === 'global') messages.global = [];
+            else {
+                const clan = getUserClan(currentUser.id);
+                if (clan) messages.clan[clan.id] = [];
+            }
+            saveAll(); render(); showToast('🗑️ Чат очищен');
+        }
+
+        function adminKick() {
+            const login = document.getElementById('adminUserLogin')?.value;
+            const user = users.find(u => u.login === login);
+            if (!user) { showToast('❌ Не найден', true); return; }
+            if (user.id === 'user_177') { showToast('❌ Нельзя кикнуть разработчика', true); return; }
+            user.online = false;
+            user.lastSeen = Date.now() - 600000;
+            saveAll(); render(); showToast(`👢 ${user.name} кикнут`);
+        }
+
+        // ==================== НАДЕЖНАЯ ПРИВЯЗКА СОБЫТИЙ ====================
+        function attachAuthEvents(retries = 0) {
+            const maxRetries = 30;
+            
+            const tabLogin = document.getElementById('tabLogin');
+            const tabRegister = document.getElementById('tabRegister');
+            const loginBtn = document.getElementById('loginBtn');
+            const registerBtn = document.getElementById('registerBtn');
+            const loginInput = document.getElementById('loginLogin');
+            const passInput = document.getElementById('loginPass');
+            const regLogin = document.getElementById('regLogin');
+            const regPass = document.getElementById('regPass');
+            const regName = document.getElementById('regName');
+            
+            if (tabLogin && tabRegister && loginBtn && registerBtn && 
+                loginInput && passInput && regLogin && regPass && regName) {
+                
+                tabLogin.onclick = showLoginForm;
+                tabRegister.onclick = showRegisterForm;
+                loginBtn.onclick = handleLogin;
+                registerBtn.onclick = handleRegister;
+                
+                console.log('✓ Все элементы найдены, события привязаны');
+                return true;
+            }
+            
+            if (retries < maxRetries) {
+                console.log(`Попытка ${retries + 1}: ждем загрузки DOM...`);
+                setTimeout(() => attachAuthEvents(retries + 1), 100);
+            } else {
+                console.error('Не удалось найти элементы после 30 попыток');
+                showToast('Ошибка загрузки. Нажмите "Очистить данные"', true);
+            }
+        }
+
+        // ==================== РЕНДЕР ====================
+        function renderAuth() {
+            return `
+                <div class="auth-wrapper">
+                    <div class="auth-glass">
+                        <h1 class="auth-title">🏦 CRYPTO BANK</h1>
+                        <div class="auth-subtitle">Войдите в свой аккаунт</div>
+                        
+                        <div class="auth-tabs">
+                            <button class="auth-tab active" id="tabLogin">🔐 ВХОД</button>
+                            <button class="auth-tab" id="tabRegister">📲 РЕГИСТРАЦИЯ</button>
+                        </div>
+
+                        <div id="loginForm" class="auth-form">
+                            <div class="auth-input-group">
+                                <label class="auth-label">ЛОГИН</label>
+                                <input type="text" id="loginLogin" class="auth-input" placeholder="Введите логин">
+                            </div>
+                            <div class="auth-input-group">
+                                <label class="auth-label">ПАРОЛЬ</label>
+                                <input type="password" id="loginPass" class="auth-input" placeholder="Введите пароль">
+                            </div>
+                            <button class="auth-btn" id="loginBtn">ВОЙТИ</button>
+                        </div>
+
+                        <div id="registerForm" class="auth-form" style="display:none;">
+                            <div class="auth-input-group">
+                                <label class="auth-label">ЛОГИН</label>
+                                <input type="text" id="regLogin" class="auth-input" placeholder="Придумайте логин">
+                            </div>
+                            <div class="auth-input-group">
+                                <label class="auth-label">ПАРОЛЬ</label>
+                                <input type="password" id="regPass" class="auth-input" placeholder="Придумайте пароль">
+                            </div>
+                            <div class="auth-input-group">
+                                <label class="auth-label">ИМЯ</label>
+                                <input type="text" id="regName" class="auth-input" placeholder="Ваше имя">
+                            </div>
+                            <button class="auth-btn" id="registerBtn">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+                        </div>
+                        
+                        <button class="danger-btn" onclick="clearAllData()">⚠️ ОЧИСТИТЬ ВСЕ ДАННЫЕ</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderProfile(user) {
+            const clan = getUserClan(user.id);
+            const role = getUserRole(user);
+            const business = getUserBusiness(user.id);
+            
+            return `
+                <div class="toxic-glass">
+                    <div style="display:flex; justify-content:space-between;">
+                        <h2 style="color:#8b5cf6;">👤 Профиль ${user.name}</h2>
+                        <button class="toxic-btn" onclick="closeProfile()">✕</button>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card"><div class="stat-value">$${formatMoney(user.balanceUsd)}</div><div>Баланс</div></div>
+                        <div class="stat-card"><div class="stat-value">${user.balanceCrystal} 💎</div><div>Кристаллы</div></div>
+                        <div class="stat-card"><div class="stat-value">${user.totalClicks || 0}</div><div>Кликов</div></div>
+                    </div>
+                    
+                    ${user.telegram ? `<div>📱 Telegram: ${user.telegram}</div>` : ''}
+                    ${user.youtube ? `<div>▶️ YouTube: ${user.youtube}</div>` : ''}
+                    ${clan ? `<div>⚔️ Клан: ${clan.name} [${clan.tag}]</div>` : ''}
+                    ${business ? `<div>🏢 Бизнес: ${business.name}</div>` : ''}
+                    <div>💳 Карта: ${user.cardNumber}</div>
+                    <div>📱 Роль: ${role}</div>
+                    
+                    <h3 style="color:#8b5cf6;">💎 NFT</h3>
+                    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:5px;">
+                        ${nfts.map(nft => {
+                            const owned = user.nfts?.some(n => n.id === nft.id);
+                            return `<div style="opacity:${owned ? 1 : 0.3};">${nft.emoji}</div>`;
+                        }).join('')}
+                    </div>
+                    
+                    <h3 style="color:#8b5cf6;">🏆 Достижения</h3>
+                    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:5px;">
+                        ${achievements.map(ach => {
+                            const earned = user.achievements?.includes(ach.id);
+                            return `<div style="opacity:${earned ? 1 : 0.3};">${ach.icon}</div>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMiningTab(u, totalBonus, passiveIncome) {
+            return `
+                <div class="toxic-glass">
+                    <h2>⛏️ МАЙНИНГ</h2>
+                    <div class="click-button" onclick="handleClick(event)">💰<br>НАЖМИ</div>
+                    <div style="font-size:36px;">${(1 * totalBonus).toFixed(2)} $</div>
+                    <div>⏱️ Пассивно: $${passiveIncome.toFixed(2)}/сек</div>
+                    
+                    <h3>⚙️ МАЙНЕРЫ</h3>
+                    ${miners.map(miner => {
+                        const owned = u.miners?.some(m => m.id === miner.id);
+                        return `
+                            <div class="toxic-card" onclick="buyMiner('${miner.id}')">
+                                <span>${miner.emoji} ${miner.name}</span>
+                                <span style="color:${owned ? '#0f0' : '#ff0'};">${owned ? '✓' : `$${miner.price}`}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function renderCryptoTab(u) {
+            const total = Object.entries(u.cryptoPortfolio || {}).reduce((s, [c, a]) => s + a * cryptoRates[c], 0);
+            return `
+                <div class="toxic-glass">
+                    <h2>📈 КРИПТО</h2>
+                    <div>💰 Портфель: $${formatMoney(total)}</div>
+                    ${Object.entries(cryptoRates).map(([coin, price]) => `
+                        <div class="toxic-card">
+                            <div>${coin} $${price.toFixed(2)}</div>
+                            <div>В портфеле: ${u.cryptoPortfolio?.[coin] || 0}</div>
+                            <button class="toxic-btn" onclick="buyCrypto('${coin}',1)">+1</button>
+                            <button class="toxic-btn" onclick="sellCrypto('${coin}',1)">-1</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderGamesTab() {
+            return `
+                <div class="toxic-glass">
+                    <h2>🎲 ИГРЫ</h2>
+                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px;">
+                        <div class="game-card" onclick="playRoulette()">🎰 РУЛЕТКА</div>
+                        <div class="game-card" onclick="playDice()">🎲 КОСТИ</div>
+                        <div class="game-card" onclick="playDouble()">⚡ УДВОЕНИЕ</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAuctionTab() {
+            const activeAuctions = auctions.filter(a => a.active);
+            return `
+                <div class="toxic-glass">
+                    <h2>🏪 АУКЦИОН</h2>
+                    <button class="toxic-btn" onclick="showAuctionModal()">📤 МОИ NFT</button>
+                    <h3>🏷️ ЛОТЫ</h3>
+                    ${activeAuctions.map(auction => {
+                        const seller = users.find(u => u.id === auction.sellerId);
+                        return `
+                            <div class="toxic-card">
+                                <div>${auction.nft.emoji} ${auction.nft.name}</div>
+                                <div>${auction.price} 💎</div>
+                                <div>Продавец: ${seller?.name}</div>
+                                <button class="toxic-btn" onclick="buyNft('${auction.id}')">Купить</button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function showAuctionModal() {
+            const userNfts = currentUser.nfts || [];
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3>📤 МОИ NFT</h3>
+                        ${userNfts.map((nft, index) => `
+                            <div class="game-card" onclick="sellNft(${index})">
+                                ${nft.emoji} ${nft.name} +${nft.bonus*100}%
+                            </div>
+                        `).join('')}
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Закрыть</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function sellNft(index) {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3>💰 ЦЕНА</h3>
+                        <input type="number" id="nftPrice" class="input-field" placeholder="Цена в 💎" min="1">
+                        <button class="toxic-btn" onclick="confirmSell(${index})">Продать</button>
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Отмена</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function confirmSell(index) {
+            const price = parseInt(document.getElementById('nftPrice')?.value);
+            if (isNaN(price) || price < 1) { showToast('Введите цену', true); return; }
+            
+            const nft = currentUser.nfts[index];
+            auctions.push({
+                id: 'auction_' + Date.now(),
+                sellerId: currentUser.id,
+                nft: nft,
+                price: price,
+                active: true,
+                time: Date.now()
+            });
+            currentUser.nfts.splice(index, 1);
+            saveAll(); render(); 
+            document.querySelector('.modal')?.remove();
+            showToast('✅ NFT выставлен');
+        }
+
+        function buyNft(auctionId) {
+            const auction = auctions.find(a => a.id === auctionId);
+            if (currentUser.balanceCrystal < auction.price) {
+                showToast('❌ Недостаточно кристаллов', true);
+                return;
+            }
+            
+            currentUser.balanceCrystal -= auction.price;
+            currentUser.nfts.push({...auction.nft});
+            const seller = users.find(u => u.id === auction.sellerId);
+            if (seller) seller.balanceCrystal += auction.price;
+            auctions = auctions.filter(a => a.id !== auctionId);
+            saveAll(); render(); showToast('✅ NFT куплен');
+        }
+
+        function renderBusinessTab(u, userBusiness) {
+            if (!userBusiness) {
+                return `
+                    <div class="toxic-glass">
+                        <h2>🏢 БИЗНЕС</h2>
+                        <button class="toxic-btn" onclick="showCreateBusinessModal()">✨ СОЗДАТЬ (5000💎)</button>
+                    </div>
+                `;
+            }
+            
+            return `
+                <div class="toxic-glass">
+                    <h2>🏢 ${userBusiness.name}</h2>
+                    <div>Уровень: ${userBusiness.level}</div>
+                    <div>Доход: $${userBusiness.income}/сек</div>
+                    <div>Сотрудников: ${userBusiness.employees.length}</div>
+                    <button class="toxic-btn" onclick="showBusinessModal('${userBusiness.id}')">⚙️ УПРАВЛЯТЬ</button>
+                </div>
+            `;
+        }
+
+        function showCreateBusinessModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3>🏢 СОЗДАТЬ БИЗНЕС</h3>
+                        <input type="text" id="businessName" class="input-field" placeholder="Название">
+                        <button class="toxic-btn" onclick="createBusiness()">Создать (5000💎)</button>
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Отмена</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function createBusiness() {
+            const name = document.getElementById('businessName')?.value;
+            if (!name) { showToast('Введите название', true); return; }
+            if (currentUser.balanceCrystal < 5000) { showToast('❌ Нет кристаллов', true); return; }
+            
+            currentUser.balanceCrystal -= 5000;
+            businesses.push({
+                id: 'business_' + Date.now(),
+                name: name,
+                ownerId: currentUser.id,
+                level: 1,
+                income: 10,
+                employees: [{ userId: currentUser.id, role: 'owner' }],
+                treasury: 0
+            });
+            saveAll(); render(); 
+            document.querySelector('.modal')?.remove();
+            showToast('✅ Бизнес создан');
+        }
+
+        function showBusinessModal(businessId) {
+            const business = businesses.find(b => b.id === businessId);
+            const isOwner = business.ownerId === currentUser.id;
+            const nextLevelPrice = businessUpgradePrices[business.level + 1];
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3>🏢 ${business.name}</h3>
+                        <div>Уровень: ${business.level}</div>
+                        <div>Доход: $${business.income}/сек</div>
+                        <div>Сотрудников: ${business.employees.length}</div>
+                        
+                        ${isOwner ? `
+                            ${nextLevelPrice ? `<button class="toxic-btn" onclick="upgradeBusiness('${business.id}')">⬆️ Улучшить (${nextLevelPrice}💎)</button>` : ''}
+                            <input type="text" id="hireLogin" class="input-field" placeholder="Логин сотрудника">
+                            <button class="toxic-btn" onclick="hireEmployee('${business.id}')">➕ Нанять</button>
+                        ` : ''}
+                        
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Закрыть</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function upgradeBusiness(businessId) {
+            const business = businesses.find(b => b.id === businessId);
+            const nextLevel = business.level + 1;
+            const price = businessUpgradePrices[nextLevel];
+            if (!price) { showToast('❌ Макс. уровень', true); return; }
+            if (currentUser.balanceCrystal < price) { showToast('❌ Нет кристаллов', true); return; }
+            
+            currentUser.balanceCrystal -= price;
+            business.level = nextLevel;
+            business.income = 10 * nextLevel;
+            saveAll(); render(); 
+            document.querySelector('.modal')?.remove();
+            showToast(`✅ Улучшен до ${nextLevel} уровня`);
+        }
+
+        function hireEmployee(businessId) {
+            const business = businesses.find(b => b.id === businessId);
+            const login = document.getElementById('hireLogin')?.value;
+            if (!login) { showToast('Введите логин', true); return; }
+            
+            const employee = users.find(u => u.login === login);
+            if (!employee) { showToast('Не найден', true); return; }
+            if (business.employees.some(e => e.userId === employee.id)) { showToast('Уже работает', true); return; }
+            
+            business.employees.push({ userId: employee.id, role: 'employee' });
+            saveAll(); render(); showToast(`✅ ${employee.name} нанят`);
+        }
+
+        function renderPvpTab() {
+            const opponents = users.filter(u => u.id !== currentUser.id && u.online).slice(0, 10);
+            return `
+                <div class="toxic-glass">
+                    <h2>🔫 PVP</h2>
+                    <div>Побед: ${currentUser.pvpWins || 0}</div>
+                    <div>Поражений: ${currentUser.pvpLosses || 0}</div>
+                    <button class="toxic-btn" onclick="showPvpModal()">⚔️ НАЙТИ БОЙ</button>
+                    
+                    <h3>⚔️ СОПЕРНИКИ</h3>
+                    ${opponents.map(opp => `
+                        <div class="toxic-card" onclick="startPvp('${opp.id}')">
+                            <span>${opp.name}</span>
+                            <span>${opp.pvpWins || 0}-${opp.pvpLosses || 0}</span>
+                            <span style="color:#0f0;">● ONLINE</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function showPvpModal() {
+            const opponents = users.filter(u => u.id !== currentUser.id && u.online).slice(0, 10);
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="toxic-glass">
+                        <h3>🔫 ВЫБЕРИТЕ СОПЕРНИКА</h3>
+                        ${opponents.map(opp => `
+                            <div class="toxic-card" onclick="startPvp('${opp.id}'); this.closest('.modal').remove()">
+                                ${opp.name} (${opp.pvpWins || 0}-${opp.pvpLosses || 0})
+                            </div>
+                        `).join('')}
+                        <button class="toxic-btn" onclick="this.closest('.modal').remove()">Закрыть</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function startPvp(opponentId) {
+            const opponent = users.find(u => u.id === opponentId);
+            const bet = prompt('Ставка ($):', '100');
+            if (!bet) return;
+            
+            const betNum = parseFloat(bet);
+            if (isNaN(betNum) || betNum < 10) { showToast('Минимум 10$', true); return; }
+            if (currentUser.balanceUsd < betNum) { showToast('Недостаточно $', true); return; }
+            if (opponent.balanceUsd < betNum) { showToast('У соперника нет денег', true); return; }
+            
+            const myPower = getTotalBonus(currentUser) * 100;
+            const oppPower = getTotalBonus(opponent) * 100;
+            const win = Math.random() < myPower / (myPower + oppPower);
+            
+            currentUser.balanceUsd -= betNum;
+            opponent.balanceUsd -= betNum;
+            
+            if (win) {
+                currentUser.balanceUsd += betNum * 2;
+                currentUser.pvpWins = (currentUser.pvpWins || 0) + 1;
+                opponent.pvpLosses = (opponent.pvpLosses || 0) + 1;
+                showToast(`🎉 ПОБЕДА! +$${betNum}`);
+            } else {
+                opponent.balanceUsd += betNum * 2;
+                currentUser.pvpLosses = (currentUser.pvpLosses || 0) + 1;
+                opponent.pvpWins = (opponent.pvpWins || 0) + 1;
+                showToast(`😢 ПОРАЖЕНИЕ... -$${betNum}`);
+            }
+            
+            saveAll(); render();
+        }
+
+        function renderFriendsTab(u) {
+            const friends = (u.friends || []).map(id => users.find(u => u.id === id)).filter(f => f);
+            const requests = (u.friendRequests || []).map(id => users.find(u => u.id === id)).filter(r => r);
+            
+            return `
+                <div class="toxic-glass">
+                    <h2>👥 ДРУЗЬЯ</h2>
+                    <button class="toxic-btn" onclick="showAddFriendModal()">➕ ДОБАВИТЬ</button>
+                    
+                    ${requests.length > 0 ? `
+                        <h3>📨 ЗАЯВКИ</h3>
+                        ${requests.map(f => `
+                            <div class="toxic-card">
+                                <span>${f.name}</span>
+                                <button class="toxic-btn" onclick="acceptFriend('${f.id}')">✓</button>
+                                <button class="toxic-btn" onclick="rejectFriend('${f.id}')">✗</button>
+                            </div>
+                        `).join('')}
+                    ` : ''}
+                    
+                    <h3>👥 МОИ ДРУЗЬЯ</h3>
+                    ${friends.map(f => `
+                        <div class="toxic-card" onclick="viewProfile('${f.id}')">
+                            <span class="${f.online ? 'friend-online' : 'friend-offline'}"></span>
+                            <span>${f.name}</span>
+                            <button class="toxic-btn" onclick="giftFriend('${f.id}'); event.stopPropagation()">🎁</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderClanTab(u, userClan) {
+            if (!userClan) {
+                return `
+                    <div class="toxic-glass">
+                        <h2>⚔️ КЛАН</h2>
+                        <button class="toxic-btn" onclick="showCreateClanModal()">⚔️ СОЗДАТЬ (1000💎)</button>
+                        <h3>Доступные кланы:</h3>
+                        ${clans.map(clan => `
+                            <div class="toxic-card" onclick="joinClan('${clan.id}')">
+                                [${clan.tag}] ${clan.name} +${((clan.clanBonus-1)*100).toFixed(0)}%
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            const rank = getClanRank(u.id);
+            const canUpgrade = rank === 'founder' || rank === 'leader';
+            const nextLevelPrice = clanUpgradePrices[userClan.level + 1];
+            
+            return `
+                <div class="toxic-glass">
+                    <h2>⚔️ ${userClan.name} [${userClan.tag}]</h2>
+                    <div>Уровень: ${userClan.level}</div>
+                    <div>Бонус: +${((userClan.clanBonus-1)*100).toFixed(0)}%</div>
+                    <div>Участников: ${userClan.members.length}</div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width:${(userClan.level/10)*100}%;"></div>
+                    </div>
+                    
+                    <h3>Участники:</h3>
+                    ${userClan.members.map(m => {
+                        const member = users.find(u => u.id === m.userId);
+                        return `
+                            <div class="toxic-card" onclick="viewProfile('${member.id}')">
+                                <span style="background:${m.rank==='founder'?'#f00':'#8b5cf6'}; color:#fff; padding:2px 8px; border-radius:12px;">${m.rank}</span>
+                                ${member.name}
+                                ${member.id === u.id ? ' (Вы)' : ''}
+                            </div>
+                        `;
+                    }).join('')}
+                    
+                    ${canUpgrade && nextLevelPrice ? `
+                        <button class="toxic-btn" onclick="upgradeClan()">⬆️ Улучшить (${nextLevelPrice}💎)</button>
+                    ` : ''}
+                    
+                    ${canUpgrade ? `
+                        <button class="toxic-btn" onclick="showChangeTagModal()">✏️ Сменить тег (5000💎)</button>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function renderChatTab(u, userClan) {
+            const globalMessages = messages.global || [];
+            const currentMessages = currentChat === 'global' ? globalMessages : (userClan ? messages.clan[userClan.id] || [] : []);
+            
+            return `
+                <div class="toxic-glass">
+                    <h2>💬 ЧАТ</h2>
+                    <div class="chat-container">
+                        <div class="chat-sidebar">
+                            <div class="chat-tab ${currentChat === 'global' ? 'active' : ''}" onclick="switchChat('global')">
+                                🌍 Общий <span class="online-count">${getOnlineCount()}</span>
+                            </div>
+                            ${userClan ? `
+                                <div class="chat-tab ${currentChat === 'clan' ? 'active' : ''}" onclick="switchChat('clan')">
+                                    ⚔️ [${userClan.tag}]
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="chat-main">
+                            <div class="chat-messages" id="chatMessages">
+                                ${currentMessages.map(msg => {
+                                    const sender = users.find(u => u.id === msg.userId);
+                                    if (!sender) return '';
+                                    const senderClan = getUserClan(sender.id);
+                                    return `
+                                        <div class="chat-message ${msg.userId === u.id ? 'own' : ''}" onclick="viewProfile('${sender.id}')">
+                                            <div class="sender">
+                                                ${sender.name}
+                                                ${senderClan ? `<span class="clan-tag">[${senderClan.tag}]</span>` : ''}
+                                            </div>
+                                            <div class="text">${msg.text}</div>
+                                            <div class="time">${new Date(msg.time).toLocaleTimeString()}</div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                            <div class="chat-input-area">
+                                <input type="text" class="chat-input" id="chatInput" placeholder="Сообщение...">
+                                <button class="toxic-btn" onclick="sendMessage()">➤</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderVipTab(u) {
+            const vipActive = u.vip?.active && u.vip.expiresAt > Date.now();
+            return `
+                <div class="toxic-glass">
+                    <h2>💎 VIP</h2>
+                    ${vipActive ? `
+                        <div>👑 VIP активен</div>
+                        <div>Осталось: ${getTimeLeft(u.vip.expiresAt)}</div>
+                    ` : `
+                        ${Object.entries(vipPrices).map(([m, p]) => `
+                            <div class="toxic-card" onclick="buyVip(${m})">
+                                ${m}м - ${p}💎
+                            </div>
+                        `).join('')}
+                    `}
+                </div>
+            `;
+        }
+
+        function renderTopTab() {
+            const topUsers = [...users].sort((a, b) => b.balanceUsd - a.balanceUsd).slice(0, 10);
+            const topClans = [...clans].sort((a, b) => b.level - a.level).slice(0, 10);
+            
+            return `
+                <div class="toxic-glass">
+                    <h2>🏆 ТОП-10</h2>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div>
+                            <h3>💰 Богачи</h3>
+                            ${topUsers.map((user, i) => `
+                                <div class="toxic-card" onclick="viewProfile('${user.id}')">
+                                    <span class="rank-badge rank-${i+1}">#${i+1}</span>
+                                    ${user.name} - $${formatMoney(user.balanceUsd)}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div>
+                            <h3>⚔️ Кланы</h3>
+                            ${topClans.map((clan, i) => `
+                                <div class="toxic-card">
+                                    <span class="rank-badge rank-${i+1}">#${i+1}</span>
+                                    [${clan.tag}] ${clan.name} - Ур.${clan.level}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDevPanel() {
+            return `
+                <div class="admin-panel-dev">
+                    <h2>👑 DEV ПАНЕЛЬ</h2>
+                    <div>Онлайн: ${getOnlineCount()}</div>
+                    <div>Всего: ${users.length}</div>
+                    <div>Кланов: ${clans.length}</div>
+                    
+                    <input type="text" id="adminUserLogin" class="input-field" placeholder="Логин">
+                    
+                    <div style="display:grid; grid-template-columns:2fr 1fr; gap:5px;">
+                        <input type="number" id="adminMoneyAmount" class="input-field" value="1000">
+                        <button class="admin-btn-dev" onclick="adminGiveMoney()">💰 Выдать $</button>
+                    </div>
+                    
+                    <div style="display:grid; grid-template-columns:2fr 1fr; gap:5px;">
+                        <input type="number" id="adminCrystalAmount" class="input-field" value="500">
+                        <button class="admin-btn-dev" onclick="adminGiveCrystals()">💎 Кристаллы</button>
+                    </div>
+                    
+                    <button class="admin-btn-dev" onclick="adminGiveNFT()">🖼️ NFT</button>
+                    <button class="admin-btn-dev" onclick="adminGiveMiner()">⚙️ Майнер</button>
+                    <button class="admin-btn-dev" onclick="adminSetRole('ADMIN')">⚡ ADMIN</button>
+                    <button class="admin-btn-dev" onclick="adminSetRole('MODER')">🛡️ MODER</button>
+                    <button class="admin-btn-dev" onclick="adminSetRole('VIP')">💎 VIP</button>
+                    <button class="admin-btn-dev" onclick="adminRemoveRole()">👤 Снять роль</button>
+                    <button class="admin-btn-dev" onclick="adminGiveVip()">⏰ VIP</button>
+                    <button class="admin-btn-dev" onclick="adminCheckUser()">🔍 Проверить</button>
+                    <button class="admin-btn-dev" onclick="adminBan()">🚫 Бан</button>
+                    <button class="admin-btn-dev" onclick="adminWarn()">⚠️ Варн</button>
+                    <button class="admin-btn-dev" onclick="adminMute()">🔇 Мут</button>
+                    <button class="admin-btn-dev" onclick="adminClearChat()">🗑️ Чат</button>
+                    <button class="admin-btn-dev" onclick="adminKick()">👢 Кик</button>
+                </div>
+            `;
+        }
+
+        function renderAdminPanel() {
+            return `
+                <div class="admin-panel-admin">
+                    <h2>⚡ ADMIN ПАНЕЛЬ</h2>
+                    <input type="text" id="adminUserLogin" class="input-field" placeholder="Логин">
+                    
+                    <div style="display:grid; grid-template-columns:2fr 1fr; gap:5px;">
+                        <input type="number" id="adminMoneyAmount" class="input-field" value="1000">
+                        <button class="admin-btn-admin" onclick="adminGiveMoney()">💰 Выдать $</button>
+                    </div>
+                    
+                    <div style="display:grid; grid-template-columns:2fr 1fr; gap:5px;">
+                        <input type="number" id="adminCrystalAmount" class="input-field" value="500">
+                        <button class="admin-btn-admin" onclick="adminGiveCrystals()">💎 Кристаллы</button>
+                    </div>
+                    
+                    <button class="admin-btn-admin" onclick="adminGiveVip()">⏰ VIP</button>
+                    <button class="admin-btn-admin" onclick="adminCheckUser()">🔍 Проверить</button>
+                    <button class="admin-btn-admin" onclick="adminWarn()">⚠️ Варн</button>
+                    <button class="admin-btn-admin" onclick="adminMute()">🔇 Мут</button>
+                    <button class="admin-btn-admin" onclick="adminClearChat()">🗑️ Чат</button>
+                    <button class="admin-btn-admin" onclick="adminKick()">👢 Кик</button>
+                </div>
+            `;
+        }
+
+        function renderMain() {
+            if (viewingProfile) {
+                return renderProfile(viewingProfile);
+            }
+            
+            const u = currentUser;
+            const role = getUserRole(u);
+            const userClan = getUserClan(u.id);
+            const userBusiness = getUserBusiness(u.id);
+            const totalBonus = getTotalBonus(u);
+            
+            let passiveIncome = 0;
+            if (u.miners) {
+                u.miners.forEach(m => {
+                    const miner = miners.find(mn => mn.id === m.id);
+                    if (miner) passiveIncome += miner.income;
+                });
+            }
+            if (userBusiness) passiveIncome += userBusiness.income;
+            passiveIncome *= totalBonus;
+
+            return `
+                <div>
+                    <div class="profile-header">
+                        <div class="profile-card" onclick="viewProfile('${u.id}')">
+                            <div class="avatar">
+                                ${u.name.charAt(0)}
+                                ${userClan ? `<span class="clan-tag-badge">${userClan.tag}</span>` : ''}
+                                <span class="role-badge badge-${role.toLowerCase()}">${role}</span>
+                            </div>
+                            <div>
+                                <span style="font-size:24px;">${u.name}</span>
+                                ${u.telegram ? `<div class="telegram-badge">📱 ${u.telegram}</div>` : ''}
+                                ${u.youtube ? `<div class="youtube-badge">▶️ ${u.youtube}</div>` : ''}
+                                <div>ID: ${u.id.slice(0,8)}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="balances">
+                            <div class="balance-item usd"><span>💰</span><span class="balance-value">$${formatMoney(u.balanceUsd)}</span></div>
+                            <div class="balance-item crystal"><span>💎</span><span class="balance-value">${Math.floor(u.balanceCrystal)}</span></div>
+                        </div>
+                        
+                        <div style="display:flex; gap:10px;">
+                            <button class="toxic-btn" onclick="editContacts()">📱 КОНТАКТЫ</button>
+                            <button class="toxic-btn" onclick="showTransferModal()">💸 ПЕРЕВОД</button>
+                            ${role === 'DEV' || role === 'ADMIN' ? 
+                                `<button class="toxic-btn" onclick="toggleAdminPanel()">${showAdminPanel ? '🔽 СКРЫТЬ' : '👑 АДМИН'}</button>` : ''}
+                            <button class="toxic-btn" onclick="logout()">🚪 ВЫЙТИ</button>
+                        </div>
+                    </div>
+
+                    <div class="toxic-tabs">
+                        <button class="toxic-tab ${currentTab === 'mine' ? 'active' : ''}" onclick="switchTab('mine')">⛏️ МАЙНИНГ</button>
+                        <button class="toxic-tab ${currentTab === 'crypto' ? 'active' : ''}" onclick="switchTab('crypto')">📈 КРИПТО</button>
+                        <button class="toxic-tab ${currentTab === 'games' ? 'active' : ''}" onclick="switchTab('games')">🎲 ИГРЫ</button>
+                        <button class="toxic-tab ${currentTab === 'auction' ? 'active' : ''}" onclick="switchTab('auction')">🏪 АУКЦИОН</button>
+                        <button class="toxic-tab ${currentTab === 'business' ? 'active' : ''}" onclick="switchTab('business')">🏢 БИЗНЕС</button>
+                        <button class="toxic-tab ${currentTab === 'pvp' ? 'active' : ''}" onclick="switchTab('pvp')">🔫 PVP</button>
+                        <button class="toxic-tab ${currentTab === 'friends' ? 'active' : ''}" onclick="switchTab('friends')">👥 ДРУЗЬЯ</button>
+                        <button class="toxic-tab ${currentTab === 'clan' ? 'active' : ''}" onclick="switchTab('clan')">⚔️ КЛАН</button>
+                        <button class="toxic-tab ${currentTab === 'chat' ? 'active' : ''}" onclick="switchTab('chat')">💬 ЧАТ</button>
+                        <button class="toxic-tab ${currentTab === 'vip' ? 'active' : ''}" onclick="switchTab('vip')">💎 VIP</button>
+                        <button class="toxic-tab ${currentTab === 'top' ? 'active' : ''}" onclick="switchTab('top')">🏆 ТОП</button>
+                    </div>
+
+                    ${currentTab === 'mine' ? renderMiningTab(u, totalBonus, passiveIncome) : ''}
+                    ${currentTab === 'crypto' ? renderCryptoTab(u) : ''}
+                    ${currentTab === 'games' ? renderGamesTab() : ''}
+                    ${currentTab === 'auction' ? renderAuctionTab() : ''}
+                    ${currentTab === 'business' ? renderBusinessTab(u, userBusiness) : ''}
+                    ${currentTab === 'pvp' ? renderPvpTab() : ''}
+                    ${currentTab === 'friends' ? renderFriendsTab(u) : ''}
+                    ${currentTab === 'clan' ? renderClanTab(u, userClan) : ''}
+                    ${currentTab === 'chat' ? renderChatTab(u, userClan) : ''}
+                    ${currentTab === 'vip' ? renderVipTab(u) : ''}
+                    ${currentTab === 'top' ? renderTopTab() : ''}
+
+                    ${showAdminPanel && role === 'DEV' ? renderDevPanel() : ''}
+                    ${showAdminPanel && role === 'ADMIN' ? renderAdminPanel() : ''}
+                </div>
+            `;
+        }
+
+        function logout() {
+            if (currentUser) {
+                currentUser.online = false;
+                currentUser.lastSeen = Date.now();
+                saveAll();
+            }
+            currentUser = null;
+            localStorage.removeItem('cryptoBankSession');
+            render();
+            showToast('Вы вышли');
+        }
+
+        // ==================== РЕНДЕР (ОСНОВНОЙ) ====================
+        function render() {
+            const app = document.getElementById('app');
+            if (!app) return;
+            
+            try {
+                if (!currentUser) {
+                    app.innerHTML = renderAuth();
+                    setTimeout(() => attachAuthEvents(), 100);
+                } else {
+                    app.innerHTML = renderMain();
+                    
+                    // Прокрутка чата вниз
+                    const chatMessages = document.getElementById('chatMessages');
+                    if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            } catch (error) {
+                console.error('Ошибка рендеринга:', error);
+                app.innerHTML = `
+                    <div class="error-container">
+                        <h2 class="error-title">⚠️ Ошибка загрузки</h2>
+                        <button class="error-btn" onclick="clearAllData()">🔄 ОЧИСТИТЬ ДАННЫЕ</button>
+                    </div>
+                `;
+            }
+        }
+
+        // ==================== ФОНОВЫЕ ПРОЦЕССЫ ====================
+        setInterval(() => {
+            if (currentUser) {
+                currentUser.online = true;
+                currentUser.lastSeen = Date.now();
+            }
+            users.forEach(u => {
+                if (u.id !== currentUser?.id && u.lastSeen && Date.now() - u.lastSeen > 60000) {
+                    u.online = false;
+                }
+            });
+            saveAll();
+        }, 30000);
+
+        setInterval(() => {
+            if (currentUser) {
+                let income = 0;
+                if (currentUser.miners) {
+                    currentUser.miners.forEach(m => {
+                        const miner = miners.find(mn => mn.id === m.id);
+                        if (miner) income += miner.income;
+                    });
+                }
+                const business = getUserBusiness(currentUser.id);
+                if (business) income += business.income;
+                const bonus = getTotalBonus(currentUser);
+                currentUser.balanceUsd += income * (bonus || 1);
+                saveAll();
+            }
+        }, 1000);
+
+        setInterval(() => {
+            if (currentUser && currentUser.autoClicker) {
+                const bonus = getTotalBonus(currentUser);
+                currentUser.balanceUsd += 1 * (bonus || 1);
+                currentUser.totalClicks++;
+                saveAll();
+            }
+        }, 1000);
+
+        setInterval(() => {
+            for (let coin in cryptoRates) {
+                let change = (Math.random() - 0.5) * 0.05;
+                cryptoRates[coin] = cryptoRates[coin] * (1 + change);
+                if (cryptoRates[coin] < 1) cryptoRates[coin] = 1;
+            }
+            if (currentUser && currentTab === 'crypto') render();
+        }, 5000);
+
+        // ==================== ЗАПУСК ====================
+        loadData();
+        render();
+    </script>
+</body>
+</html>
